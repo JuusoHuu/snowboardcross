@@ -36,7 +36,7 @@ scene("gameover", (finalScore) => {
 })
 
 scene("main", () => {
-    let SPEED = 100
+    let SPEED = 150
     const SCALE_X = 7
     const SCALE_Y = 4
     const TILE_W = 57 * SCALE_X
@@ -167,7 +167,7 @@ scene("main", () => {
         })
     }
 
-    loop(3, () => {
+    loop(5, () => {
         spawnObstacle()
     })
 
