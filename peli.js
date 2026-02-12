@@ -148,7 +148,7 @@ scene("main", () => {
         player.pos.x = clamp(player.pos.x, tasoVasen + 30, tasoOikea - 30)
         if (player.pos.y > height()) {
             destroy(player)
-             go("gameover")
+             go("gameover", SCORE)
         }
     })
 
@@ -202,3 +202,4 @@ scene("main", () => {
 
 
 go ("main")
+
