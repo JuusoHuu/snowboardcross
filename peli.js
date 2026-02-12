@@ -4,12 +4,12 @@ kaboom({
     crisp: true,
 })
 
-loadSprite("player", "sprites/player.png")
-loadSprite("stone", "sprites/stone.png")
-loadSprite("gate", "sprites/gate.png")
-loadSprite("log-right", "sprites/log-right.png")
-loadSprite("log-left", "sprites/log-left.png")
-loadSprite("background", "sprites/background.png")
+loadSprite("player", "/sprites/player.png")
+loadSprite("stone", "/sprites/stone.png")
+loadSprite("gate", "/sprites/gate.png")
+loadSprite("log-right", "/sprites/log-right.png")
+loadSprite("log-left", "/sprites/log-left.png")
+loadSprite("background", "/sprites/background.png")
 
 scene("gameover", (finalScore) => {
     add([
@@ -40,6 +40,7 @@ scene("gameover", (finalScore) => {
         go("main")
     })
 })
+
 scene("main", () => {
     let SPEED = 70
     const SCALE_X = 7
@@ -49,9 +50,6 @@ scene("main", () => {
     const MOVE_SPEED = 150
     const SCALE = 1.9
     let SCORE = 0
-    let OB_SPAWN_RATE = 1.5
-    let OB_TIMER
-
 
     const tilesNeeded = Math.ceil(height() / TILE_H) + 1
 
@@ -66,9 +64,8 @@ scene("main", () => {
     const tasoVasen = centerX
     const tasoOikea = centerX + TILE_W
 
-
     for (let i = 0; i < tilesNeeded; i++) {
-            add([
+        add([
             sprite("background"),
             pos(centerX, i * TILE_H),
             scale(SCALE_X, SCALE_Y),
@@ -95,41 +92,34 @@ scene("main", () => {
         }
     ])
 
-
     onUpdate(() => {
         get("bgTile").forEach(tile => {
             tile.move(0, SPEED)
 
             if (tile.pos.y >= height()) {
-            tile.pos.y -= TILE_H * tilesNeeded
+                tile.pos.y -= TILE_H * tilesNeeded
             }
         })
 
-        get ("obstacle").forEach((ob) => {
-        ob.move(0, SPEED)
+        get("obstacle").forEach(ob => {
+            ob.move(0, SPEED)
 
-        if (ob.pos.y > 450 && !ob.passed) {
-            ob.passed = true
-            SCORE++
-            score.text = SCORE.toString()
-            updateSpeed()
-        }
+            if (ob.pos.y > 450 && !ob.passed) {
+                ob.passed = true
+                SCORE++
+                score.text = SCORE.toString()
+                updateSpeed()
+            }
 
-        if(ob.pos.y > height() + 30){
-            destroy(ob)
-        }
+            if (ob.pos.y > height() + 30) {
+                destroy(ob)
+            }
         })
-        OB_TIMER += dt()
-
-if (OB_TIMER >= OB_SPAWN_RATE) {
-    spawnObstacle()
-    OB_TIMER = 0
-}
     })
 
     const player = add([
         sprite("player"),
-        pos(centerX + TILE_W / 2, height() -50),
+        pos(centerX + TILE_W / 2, height() - 50),
         anchor("center"),
         area(),
         body(),
@@ -140,15 +130,15 @@ if (OB_TIMER >= OB_SPAWN_RATE) {
         player.move(-MOVE_SPEED, 0)
     })
 
-    onKeyDown("d", () =>{
+    onKeyDown("d", () => {
         player.move(MOVE_SPEED, 0)
     })
 
-    onKeyDown("w", () =>{
+    onKeyDown("w", () => {
         player.move(0, -MOVE_SPEED)
     })
 
-    onKeyDown("s", () =>{
+    onKeyDown("s", () => {
         player.move(0, MOVE_SPEED)
     })
 
@@ -156,30 +146,37 @@ if (OB_TIMER >= OB_SPAWN_RATE) {
         player.pos.x = clamp(player.pos.x, tasoVasen + 30, tasoOikea - 30)
         if (player.pos.y > height()) {
             destroy(player)
-             go("gameover", SCORE)
+            go("gameover")
         }
     })
 
     function spawnObstacle() {
-    const type = choose(["stone", "gate", "log-right", "log-left"])
-    
-    const obstacle = add([
-        sprite(type),
-        pos(rand(tasoVasen + 40, tasoOikea - 40), -50), // random X at spawn
-        scale(SCALE),
-        area(),
-        anchor("center"),
-        "obstacle",
-    ])
+        const x = rand(tasoVasen + 20, tasoOikea - 20)
+        const type = choose(["stone", "gate", "log-right", "log-left"])
+        
+        const obstacle = add([
+            sprite(type),
+            pos(centerX, -50),
+            scale(SCALE),
+            area(),
+            body({ isStatic: true }),
+            anchor("center"),
+            "obstacle",
+        ])
+
         const halfWidth = obstacle.width / 2
         obstacle.pos.x = rand(tasoVasen + halfWidth, tasoOikea - halfWidth)
 
         obstacle.onUpdate(() => {
-        const halfWidth = obstacle.width / 2
-        obstacle.pos.x = clamp(obstacle.pos.x, tasoVasen + 30, tasoOikea - 30)
-    })
+            const halfWidth = obstacle.width / 2
+            obstacle.pos.x = clamp(obstacle.pos.x, tasoVasen + 30, tasoOikea - 30)
+        })
     }
-
+
+    loop(1.5, () => {
+        spawnObstacle()
+    })
+
     player.onCollide("obstacle", () => {
         go("gameover", SCORE)
     })
@@ -187,17 +184,13 @@ if (OB_TIMER >= OB_SPAWN_RATE) {
     let scoreTracker = 0
     
     function updateSpeed() {
-    if (SCORE >= scoreTracker + 10) {
-        scoreTracker += 10
-        OB_SPAWN_RATE += 0.2
-        if (OB_SPAWN_RATE > 3) OB_SPAWN_RATE = 3
-        console.log("New spawn rate:", OB_SPAWN_RATE)
+        if (SCORE >= scoreTracker + 10) {
+            SPEED += 10
+            scoreTracker += 10
+            console.log("speed: ", SPEED)
+        }       
     }
-}
 
-spawnLoop = loop(OB_SPAWN_RATE, () => {
-    spawnObstacle()
-}
     const ohje = add([
         text("Use WASD to move"),
         pos(40, 20),
@@ -206,6 +199,4 @@ spawnLoop = loop(OB_SPAWN_RATE, () => {
     ])
 })
 
-
-go ("main")
-
+go("main")
