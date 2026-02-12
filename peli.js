@@ -119,6 +119,12 @@ scene("main", () => {
             destroy(ob)
         }
         })
+        OB_TIMER += dt()
+
+if (OB_TIMER >= OB_SPAWN_RATE) {
+    spawnObstacle()
+    OB_TIMER = 0
+}
     })
 
     const player = add([
@@ -182,21 +188,9 @@ scene("main", () => {
     
     function updateSpeed() {
     if (SCORE >= scoreTracker + 10) {
-
         scoreTracker += 10
-
         OB_SPAWN_RATE += 0.2
-
-        if (OB_SPAWN_RATE > 3) {
-            OB_SPAWN_RATE = 3
-        }
-
-        spawnLoop.cancel()
-
-        spawnLoop = loop(OB_SPAWN_RATE, () => {
-            spawnObstacle()
-        })
-
+        if (OB_SPAWN_RATE > 3) OB_SPAWN_RATE = 3
         console.log("New spawn rate:", OB_SPAWN_RATE)
     }
 }
