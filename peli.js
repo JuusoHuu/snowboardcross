@@ -24,11 +24,11 @@ scene("gameover", (finalScore) => {
         anchor("center"),        
         scale(1),
     ])
-    add([
-        text(finalScore),
-        pos(width() / 2 + 100, height() / 2 + 80),
-        anchor("center"),
-        scale(1),
+   // add([
+    //    text(finalScore),
+       // pos(width() / 2 + 100, height() / 2 + //80),
+       // anchor("center"),
+        //scale(1),
     add([
         text("Press Space to Restart"),
         pos(width() / 2, height() / 2 - 120),
