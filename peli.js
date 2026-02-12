@@ -167,7 +167,7 @@ scene("main", () => {
         })
     }
 
-    loop(3, () => {
+    loop(0.5, () => {
         spawnObstacle()
     })
 
