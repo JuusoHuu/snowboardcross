@@ -19,14 +19,8 @@ scene("gameover", (finalScore) => {
         scale(2),
     ])
     add([
-        text("Score: "),
+        text("Score: ", finalScore),
         pos(width() / 2, height() / 2 + 80),
-        anchor("center"),        
-        scale(1),
-    ])
-    add([
-        text(finalScore),
-        pos(width() / 2 + 70, height() / 2 + 82),
         anchor("center"),        
         scale(1),
     ])
@@ -146,7 +140,7 @@ scene("main", () => {
         player.pos.x = clamp(player.pos.x, tasoVasen + 30, tasoOikea - 30)
         if (player.pos.y > height()) {
             destroy(player)
-            go("gameover")
+            go("gameover", SCORE)
         }
     })
 
