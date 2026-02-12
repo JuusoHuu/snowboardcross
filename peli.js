@@ -104,7 +104,7 @@ scene("main", () => {
             }
         })
 
-        get ("obstacle").forEach(ob => {
+        get ("obstacle").forEach((ob) => {
         ob.move(0, SPEED)
 
         if (ob.pos.y > 450 && !ob.passed) {
