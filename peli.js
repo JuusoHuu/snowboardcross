@@ -49,6 +49,7 @@ scene("main", () => {
     const MOVE_SPEED = 150
     const SCALE = 1.9
     let SCORE = 0
+    let OB_SPAWN_RATE = 1.5
 
 
     const tilesNeeded = Math.ceil(height() / TILE_H) + 1
@@ -173,11 +174,7 @@ scene("main", () => {
         obstacle.pos.x = clamp(obstacle.pos.x, tasoVasen + 30, tasoOikea - 30)
     })
     }
-
-    loop(1.5, () => {
-        spawnObstacle()
-    })
-
+
     player.onCollide("obstacle", () => {
         go("gameover", SCORE)
     })
@@ -189,8 +186,12 @@ scene("main", () => {
             SPEED += 10
             scoreTracker += 10
             console.log("speed: ", SPEED)
-        }       
-    }
+            OB_SPAWN_RATE += 0.3
+        } 
+        loop(OB_SPAWN_RATE, () => {
+            spawnObstacle()
+        }
+    })
 
     const ohje = add([
         text("Use WASD to move"),
