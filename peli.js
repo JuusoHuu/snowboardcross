@@ -154,19 +154,18 @@ scene("main", () => {
         }
     })
 
-    function spawnObstacle(){
-        const x = rand(tasoVasen + 20 , tasoOikea - 20)
-        const type = choose(["stone", "gate", "log-right", "log-left"])
-        
-        const obstacle = add([
-            sprite(type),
-            pos(centerX, -50),
-            scale(SCALE),
-            area(),
-            body({isStatic : true}),
-            anchor("center"),
-            "obstacle",
-        ])
+    function spawnObstacle() {
+    const type = choose(["stone", "gate", "log-right", "log-left"])
+    
+    const obstacle = add([
+        sprite(type),
+        pos(rand(tasoVasen + 40, tasoOikea - 40), -50), // random X at spawn
+        scale(SCALE),
+        area(),
+        body({ isStatic: true }),
+        anchor("center"),
+        "obstacle",
+    ])
         const halfWidth = obstacle.width / 2
         obstacle.pos.x = rand(tasoVasen + halfWidth, tasoOikea - halfWidth)
 
