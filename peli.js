@@ -4,12 +4,12 @@ kaboom({
     crisp: true,
 })
 
-loadSprite("player", "/sprites/player.png")
-loadSprite("stone", "/sprites/stone.png")
-loadSprite("gate", "/sprites/gate.png")
-loadSprite("log-right", "/sprites/log-right.png")
-loadSprite("log-left", "/sprites/log-left.png")
-loadSprite("background", "/sprites/background.png")
+loadSprite("player", "sprites/player.png")
+loadSprite("stone", "sprites/stone.png")
+loadSprite("gate", "sprites/gate.png")
+loadSprite("log-right", "sprites/log-right.png")
+loadSprite("log-left", "sprites/log-left.png")
+loadSprite("background", "sprites/background.png")
 
 scene("gameover", (finalScore) => {
     add([
@@ -199,5 +199,6 @@ scene("main", () => {
         z(100),
     ])
 })
+
 
 go ("main")
