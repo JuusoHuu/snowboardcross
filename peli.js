@@ -50,6 +50,7 @@ scene("main", () => {
     const SCALE = 1.9
     let SCORE = 0
     let OB_SPAWN_RATE = 1.5
+    let spawnLoop
 
 
     const tilesNeeded = Math.ceil(height() / TILE_H) + 1
@@ -181,19 +182,26 @@ scene("main", () => {
 
     let scoreTracker = 0
     
-    function updateSpeed(){
-        if (SCORE >= scoreTracker + 10) {
-            SPEED += 10
-            scoreTracker += 10
-            console.log("speed: ", SPEED)
-            OB_SPAWN_RATE += 0.3
-        } 
-        
-    })
-loop(OB_SPAWN_RATE, () => {
-            spawnObstacle()
+    function updateSpeed() {
+    if (SCORE >= scoreTracker + 10) {
+
+        scoreTracker += 10
+
+        OB_SPAWN_RATE += 0.2
+
+        if (OB_SPAWN_RATE > 3) {
+            OB_SPAWN_RATE = 3
         }
 
+        spawnLoop.cancel()
+
+        spawnLoop = loop(OB_SPAWN_RATE, () => {
+            spawnObstacle()
+        })
+
+        console.log("New spawn rate:", OB_SPAWN_RATE)
+    }
+}
     const ohje = add([
         text("Use WASD to move"),
         pos(40, 20),
