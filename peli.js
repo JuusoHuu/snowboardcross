@@ -162,7 +162,6 @@ scene("main", () => {
         pos(rand(tasoVasen + 40, tasoOikea - 40), -50), // random X at spawn
         scale(SCALE),
         area(),
-        body({ isStatic: true }),
         anchor("center"),
         "obstacle",
     ])
