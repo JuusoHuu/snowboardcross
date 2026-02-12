@@ -50,7 +50,7 @@ scene("main", () => {
     const SCALE = 1.9
     let SCORE = 0
     let OB_SPAWN_RATE = 1.5
-    let spawnLoop
+    let OB_TIMER
 
 
     const tilesNeeded = Math.ceil(height() / TILE_H) + 1
