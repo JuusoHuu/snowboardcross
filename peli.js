@@ -188,10 +188,11 @@ scene("main", () => {
             console.log("speed: ", SPEED)
             OB_SPAWN_RATE += 0.3
         } 
-        loop(OB_SPAWN_RATE, () => {
+        
+    })
+loop(OB_SPAWN_RATE, () => {
             spawnObstacle()
         }
-    })
 
     const ohje = add([
         text("Use WASD to move"),
