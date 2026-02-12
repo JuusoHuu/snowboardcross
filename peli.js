@@ -179,7 +179,7 @@ scene("main", () => {
     
     function updateSpeed() {
         if (SCORE >= scoreTracker + 10) {
-            SPEED += 10
+            SPEED += 20
             scoreTracker += 10
             console.log("speed: ", SPEED)
         }       
