@@ -36,7 +36,7 @@ scene("gameover", (finalScore) => {
 })
 
 scene("main", () => {
-    let SPEED = 150
+    let SPEED = 300
     const SCALE_X = 7
     const SCALE_Y = 4
     const TILE_W = 57 * SCALE_X
