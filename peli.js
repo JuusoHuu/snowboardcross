@@ -205,7 +205,7 @@ scene("main", () => {
 
 spawnLoop = loop(OB_SPAWN_RATE, () => {
     spawnObstacle()
-
+}
     const ohje = add([
         text("Use WASD to move"),
         pos(40, 20),
