@@ -4,12 +4,12 @@ kaboom({
     crisp: true,
 })
 
-loadSprite("player", "/sprites/player.png")
-loadSprite("stone", "/sprites/stone.png")
-loadSprite("gate", "/sprites/gate.png")
-loadSprite("log-right", "/sprites/log-right.png")
-loadSprite("log-left", "/sprites/log-left.png")
-loadSprite("background", "/sprites/background.png")
+loadSprite("player", "sprites/player.png")
+loadSprite("stone", "sprites/stone.png")
+loadSprite("gate", "sprites/gate.png")
+loadSprite("log-right", "sprites/log-right.png")
+loadSprite("log-left", "sprites/log-left.png")
+loadSprite("background", "sprites/background.png")
 
 scene("difficulty", () => {
     const Easy_Difficulty = "easy"
@@ -272,5 +272,6 @@ scene("main", (difficulty) => {
         z(100),
     ])
 })
+
 
 go ("difficulty")
