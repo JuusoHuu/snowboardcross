@@ -4,14 +4,51 @@ kaboom({
     crisp: true,
 })
 
-loadSprite("player", "sprites/player.png")
-loadSprite("stone", "sprites/stone.png")
-loadSprite("gate", "sprites/gate.png")
-loadSprite("log-right", "sprites/log-right.png")
-loadSprite("log-left", "sprites/log-left.png")
-loadSprite("background", "sprites/background.png")
+loadSprite("player", "/sprites/player.png")
+loadSprite("stone", "/sprites/stone.png")
+loadSprite("gate", "/sprites/gate.png")
+loadSprite("log-right", "/sprites/log-right.png")
+loadSprite("log-left", "/sprites/log-left.png")
+loadSprite("background", "/sprites/background.png")
 
-scene("gameover", (finalScore) => {
+scene("difficulty", () => {
+    const Easy_Difficulty = "easy"
+    const Medium_Difficulty = "medium"
+    const Hard_Difficulty = "hard"
+
+    add([
+        text("Select Difficulty"),
+        pos(width() / 2, height() / 2 - 100),
+        anchor("center"),
+        scale(1.5),
+    ])
+    add([
+        text("Easy (press 1)"),
+        pos(width() / 2, height() / 2),
+        anchor("center"),
+    ])
+    add([
+        text("Medium (press 2)"),
+        pos(width() / 2, height() / 2 + 50),
+        anchor("center"),
+    ])  
+    add([
+        text("Hard (press 3)"),
+        pos(width() / 2, height() / 2 + 100),
+        anchor("center"),
+    ])
+    onKeyPress("1", () => {
+        go("main" , Easy_Difficulty)
+    })
+    onKeyPress("2", () => {
+        go("main", Medium_Difficulty)
+    })
+    onKeyPress("3", () => {
+        go("main", Hard_Difficulty)
+    })
+})
+
+scene("gameover", (finalScore = 0) => {
     add([
         text("Game Over"),
         pos(width() / 2, height() / 2),
@@ -19,36 +56,51 @@ scene("gameover", (finalScore) => {
         scale(2),
     ])
     add([
-        text("Score: "),
+        text("Score: " + finalScore),
         pos(width() / 2, height() / 2 + 80),
         anchor("center"),        
         scale(1),
     ])
-   // add([
-    //    text(finalScore),
-       // pos(width() / 2 + 100, height() / 2 + //80),
-       // anchor("center"),
-        //scale(1),
     add([
         text("Press Space to Restart"),
         pos(width() / 2, height() / 2 - 120),
         anchor("center"),        
-        scale(1),
+        scale(0.8),
     ])
+    add([
+        text("Press R to Change Difficulty"),
+        pos(width() / 2, height() / 2 - 85),
+        anchor("center"),        
+        scale(0.8),
+    ])
+    onKeyPress("r", () => {
+        go("difficulty")
+    })
     onKeyPress("space", () => {
         go("main")
     })
 })
 
-scene("main", () => {
-    let SPEED = 300
-    const SCALE_X = 7
+scene("main", (difficulty) => {
+
+    const SCALE_X = 6
     const SCALE_Y = 4
     const TILE_W = 57 * SCALE_X
     const TILE_H = 63 * SCALE_Y
     const MOVE_SPEED = 150
-    const SCALE = 1.9
     let SCORE = 0
+
+    let SPEED = 0
+
+    if (difficulty === "easy") {
+        SPEED = 100
+    }
+    else if (difficulty === "medium") {
+        SPEED = 125
+    }
+    else if (difficulty === "hard") {
+        SPEED = 150
+    }
 
     const tilesNeeded = Math.ceil(height() / TILE_H) + 1
 
@@ -56,15 +108,15 @@ scene("main", () => {
         sprite("background"),
         scale(SCALE_X, SCALE_Y),
     ])
-    const REAL_TILEW = bgTest.width
     destroy(bgTest)
 
     const centerX = (width() - TILE_W) / 2
     const tasoVasen = centerX
     const tasoOikea = centerX + TILE_W
 
+
     for (let i = 0; i < tilesNeeded; i++) {
-        add([
+            add([
             sprite("background"),
             pos(centerX, i * TILE_H),
             scale(SCALE_X, SCALE_Y),
@@ -77,7 +129,7 @@ scene("main", () => {
         rect(TILE_W, 10),
         pos(centerX, 450),
         area(),
-        opacity(0),
+        opacity(0,5),
         "scorer",
     ])
 
@@ -96,83 +148,98 @@ scene("main", () => {
             tile.move(0, SPEED)
 
             if (tile.pos.y >= height()) {
-                tile.pos.y -= TILE_H * tilesNeeded
+            tile.pos.y -= TILE_H * tilesNeeded
             }
         })
 
-        get("obstacle").forEach(ob => {
-            ob.move(0, SPEED)
+        get ("obstacle").forEach(ob => {
+        ob.move(0, SPEED)
 
-            if (ob.pos.y > 450 && !ob.passed) {
-                ob.passed = true
-                SCORE++
-                score.text = SCORE.toString()
-                updateSpeed()
-            }
+        if (ob.pos.y > player.pos.y && !ob.passed) {
+            ob.passed = true
+            SCORE++
+            score.text = SCORE.toString()
+            updateSpeed()
+        }
 
-            if (ob.pos.y > height() + 30) {
-                destroy(ob)
-            }
+        if(ob.pos.y > height() + 30){
+            destroy(ob)
+        }
         })
     })
 
     const player = add([
         sprite("player"),
-        pos(centerX + TILE_W / 2, height() - 50),
+        pos(centerX + TILE_W / 2, height() -50),
         anchor("center"),
         area(),
         body(),
-        scale(SCALE),
+        scale(1.8),
     ])
 
     onKeyDown("a", () => {
         player.move(-MOVE_SPEED, 0)
     })
 
-    onKeyDown("d", () => {
+    onKeyDown("d", () =>{
         player.move(MOVE_SPEED, 0)
     })
 
-    onKeyDown("w", () => {
+    onKeyDown("w", () =>{
         player.move(0, -MOVE_SPEED)
     })
 
-    onKeyDown("s", () => {
+    onKeyDown("s", () =>{
         player.move(0, MOVE_SPEED)
     })
 
     player.onUpdate(() => {
         player.pos.x = clamp(player.pos.x, tasoVasen + 30, tasoOikea - 30)
+
         if (player.pos.y > height()) {
             destroy(player)
-            go("gameover", SCORE)
+             go("gameover", SCORE)
+        }
+        if (player.pos.y < -70) {
+            destroy(player)
+             go("gameover", SCORE)
         }
     })
 
-    function spawnObstacle() {
-        const x = rand(tasoVasen + 20, tasoOikea - 20)
+    function spawnObstacle(){
         const type = choose(["stone", "gate", "log-right", "log-left"])
         
         const obstacle = add([
             sprite(type),
             pos(centerX, -50),
-            scale(SCALE),
+            scale(1.6),
             area(),
-            body({ isStatic: true }),
+            body({isStatic : true}),
             anchor("center"),
             "obstacle",
         ])
 
+        obstacle.passed = false
         const halfWidth = obstacle.width / 2
         obstacle.pos.x = rand(tasoVasen + halfWidth, tasoOikea - halfWidth)
 
         obstacle.onUpdate(() => {
-            const halfWidth = obstacle.width / 2
-            obstacle.pos.x = clamp(obstacle.pos.x, tasoVasen + 30, tasoOikea - 30)
-        })
+        obstacle.pos.x = clamp(obstacle.pos.x, tasoVasen + 30, tasoOikea - 30)
+    })
     }
 
-    loop(0.5, () => {
+    let spawnRate = 0
+    if (difficulty === "easy") {
+        spawnRate = 2.0
+    }
+    else if (difficulty === "medium") {
+        spawnRate = 1.5
+    }
+    else if (difficulty === "hard") {
+        spawnRate = 1.0
+    }
+
+    loop(spawnRate, () => {
         spawnObstacle()
     })
 
@@ -182,15 +249,23 @@ scene("main", () => {
 
     let scoreTracker = 0
     
-    function updateSpeed() {
+    function updateSpeed(){
         if (SCORE >= scoreTracker + 10) {
-            SPEED += 40
+            if (difficulty === "easy") {
+                SPEED += 10
+            }
+            else if (difficulty === "medium") { 
+                SPEED += 20
+            }
+            else if (difficulty === "hard") {
+                SPEED += 30
+            }
             scoreTracker += 10
             console.log("speed: ", SPEED)
         }       
     }
 
-    const ohje = add([
+    add([
         text("Use WASD to move"),
         pos(40, 20),
         scale(0.5),
@@ -198,4 +273,4 @@ scene("main", () => {
     ])
 })
 
-go("main")
+go ("difficulty")
