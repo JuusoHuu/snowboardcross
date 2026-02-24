@@ -273,5 +273,4 @@ scene("main", (difficulty) => {
     ])
 })
 
-
 go ("difficulty")
