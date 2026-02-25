@@ -4,6 +4,7 @@ kaboom({
     crisp: true,
 })
 
+//ladataan spritet
 loadSprite("player", "sprites/player.png")
 loadSprite("stone", "sprites/stone.png")
 loadSprite("gate", "sprites/gate.png")
@@ -11,6 +12,11 @@ loadSprite("log-right", "sprites/log-right.png")
 loadSprite("log-left", "sprites/log-left.png")
 loadSprite("background", "sprites/background.png")
 
+loadSound("score", "sounds/score.mp3")
+loadSound("wooosh", "sounds/wooosh.mp3")
+loadSound("blip", "sounds/blip.mp3")
+
+//scene vaikeustason valitsemista varten
 scene("difficulty", () => {
     const Easy_Difficulty = "easy"
     const Medium_Difficulty = "medium"
@@ -48,7 +54,8 @@ scene("difficulty", () => {
     })
 })
 
-scene("gameover", (finalScore = 0) => {
+//scene pelin päättymistä varten, näyttää pisteet ja mahdollisuuden restarttiin tai vaikeustason vaihtamiseen
+scene("gameover", ({ score = 0, difficulty }) => {
     add([
         text("Game Over"),
         pos(width() / 2, height() / 2),
@@ -56,7 +63,7 @@ scene("gameover", (finalScore = 0) => {
         scale(2),
     ])
     add([
-        text("Score: " + finalScore),
+        text("Score: " + score),
         pos(width() / 2, height() / 2 + 80),
         anchor("center"),        
         scale(1),
@@ -77,12 +84,13 @@ scene("gameover", (finalScore = 0) => {
         go("difficulty")
     })
     onKeyPress("space", () => {
-        go("main")
+        go("main", difficulty)
+        console.log(difficulty)
     })
 })
 
+//itse peli
 scene("main", (difficulty) => {
-
     const SCALE_X = 6
     const SCALE_Y = 4
     const TILE_W = 57 * SCALE_X
@@ -159,6 +167,7 @@ scene("main", (difficulty) => {
             ob.passed = true
             SCORE++
             score.text = SCORE.toString()
+            play("score")
             updateSpeed()
         }
 
@@ -197,12 +206,14 @@ scene("main", (difficulty) => {
         player.pos.x = clamp(player.pos.x, tasoVasen + 30, tasoOikea - 30)
 
         if (player.pos.y > height()) {
+            play("blip")
             destroy(player)
-             go("gameover", SCORE)
+            go("gameover", { score: SCORE, difficulty })
         }
         if (player.pos.y < -70) {
+            play("blip")
             destroy(player)
-             go("gameover", SCORE)
+            go("gameover", { score: SCORE, difficulty })
         }
     })
 
@@ -244,7 +255,9 @@ scene("main", (difficulty) => {
     })
 
     player.onCollide("obstacle", () => {
-        go("gameover", SCORE)
+        play("blip")
+        destroy(player)
+        go("gameover", { score: SCORE, difficulty })
     })
 
     let scoreTracker = 0
@@ -262,6 +275,7 @@ scene("main", (difficulty) => {
             }
             scoreTracker += 10
             console.log("speed: ", SPEED)
+            play("wooosh")
         }       
     }
 
