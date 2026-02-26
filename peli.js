@@ -43,6 +43,8 @@ scene("difficulty", () => {
         pos(width() / 2, height() / 2 + 100),
         anchor("center"),
     ])
+
+    //siirrytään peliin pelaajan valitsemalla vaikeusasteella
     onKeyPress("1", () => {
         go("main" , Easy_Difficulty)
     })
@@ -80,9 +82,11 @@ scene("gameover", ({ score = 0, difficulty }) => {
         anchor("center"),        
         scale(0.8),
     ])
+    //pääsee takaisin vaikeusasteen vaihto valikkoon
     onKeyPress("r", () => {
         go("difficulty")
     })
+    //aloittaa pelin uudestaan
     onKeyPress("space", () => {
         go("main", difficulty)
         console.log(difficulty)
@@ -91,15 +95,16 @@ scene("gameover", ({ score = 0, difficulty }) => {
 
 //itse peli
 scene("main", (difficulty) => {
+    //muuttujat
     const SCALE_X = 6
     const SCALE_Y = 4
     const TILE_W = 57 * SCALE_X
     const TILE_H = 63 * SCALE_Y
     const MOVE_SPEED = 150
     let SCORE = 0
-
     let SPEED = 0
-
+    
+    //pelaajan valitseman vaikeusasteen SPEED-muuttujan arvot
     if (difficulty === "easy") {
         SPEED = 100
     }
@@ -109,14 +114,9 @@ scene("main", (difficulty) => {
     else if (difficulty === "hard") {
         SPEED = 150
     }
-
+    
+    //taustan loputon scrollaus
     const tilesNeeded = Math.ceil(height() / TILE_H) + 1
-
-    const bgTest = add([
-        sprite("background"),
-        scale(SCALE_X, SCALE_Y),
-    ])
-    destroy(bgTest)
 
     const centerX = (width() - TILE_W) / 2
     const tasoVasen = centerX
