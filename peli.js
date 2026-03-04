@@ -118,11 +118,12 @@ scene("main", (difficulty) => {
     //taustan loputon scrollaus
     const tilesNeeded = Math.ceil(height() / TILE_H) + 1
 
+    //muuttujat jotta pelaaja ei pystyisi liikkumaan taustan ulkopuolelle
     const centerX = (width() - TILE_W) / 2
     const tasoVasen = centerX
     const tasoOikea = centerX + TILE_W
 
-
+    //taustan koko aikainen luominen
     for (let i = 0; i < tilesNeeded; i++) {
             add([
             sprite("background"),
@@ -132,15 +133,8 @@ scene("main", (difficulty) => {
             "bgTile",
         ])
     }
-    
-    add([
-        rect(TILE_W, 10),
-        pos(centerX, 450),
-        area(),
-        opacity(0,5),
-        "scorer",
-    ])
 
+    //scoren lisääminen ja päivittäminen
     const score = add([
         text("0"),
         pos(100, 50),
@@ -151,6 +145,7 @@ scene("main", (difficulty) => {
         }
     ])
 
+    
     onUpdate(() => {
         get("bgTile").forEach(tile => {
             tile.move(0, SPEED)
